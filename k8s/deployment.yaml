@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wisecow-deployment
+  namespace: wisecow
+  labels:
+    app: wisecow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wisecow
+  template:
+    metadata:
+      labels:
+        app: wisecow
+    spec:
+      containers:
+      - name: wisecow
+        image: wisecow:latest    # locally built image
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 4499
+        # Optional: readiness probe to check container is alive
+        readinessProbe:
+          exec:
+            command:
+              - nc
+              - -z
+              - localhost
+              - "4499"
+          initialDelaySeconds: 2
+          periodSeconds: 5
