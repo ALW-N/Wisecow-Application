@@ -45,29 +45,28 @@ jobs:
           echo "${{ env.IMAGE_NAME }}:${{ github.sha }}"
 
   deploy:
-    name: Deploy to Kubernetes (if KUBECONFIG provided)
+    name: Deploy to Kubernetes
     needs: build-and-push
     runs-on: ubuntu-latest
-    if: ${{ secrets.KUBECONFIG }}
     steps:
-      - name: Checkout (for kubectl manifests if needed)
-        uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
 
-      - name: Install kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'latest'
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: "latest"
 
-      - name: Setup kubeconfig from secret
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
-          chmod 600 $HOME/.kube/config
+    - name: Setup kubeconfig from secret
+      run: |
+        mkdir -p $HOME/.kube
+        echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+        chmod 600 $HOME/.kube/config
 
-      - name: Set image to new sha tag
-        run: |
-          kubectl -n wisecow set image deployment/wisecow-deployment wisecow=${{ env.IMAGE_NAME }}:${{ github.sha }} --record
+    - name: Set image to new sha tag
+      run: |
+        kubectl -n wisecow set image deployment/wisecow-deployment wisecow=${{ env.IMAGE_NAME }}:${{ github.sha }} --record
 
-      - name: Wait for rollout to finish
-        run: |
-          kubectl -n wisecow rollout status deployment/wisecow-deployment --timeout=180s
+    - name: Wait for rollout to finish
+      run: |
+        kubectl -n wisecow rollout status deployment/wisecow-deployment --timeout=180s
