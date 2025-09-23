@@ -17,11 +17,11 @@ spec:
     spec:
       containers:
       - name: wisecow
-        image: wisecow:latest    # locally built image
-        imagePullPolicy: Never
+        # replace <DOCKER_USERNAME> with your Docker Hub username
+        image: katsura11/wisecow:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 4499
-        # Optional: readiness probe to check container is alive
         readinessProbe:
           exec:
             command:
