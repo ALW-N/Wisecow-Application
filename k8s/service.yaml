@@ -10,4 +10,4 @@ spec:
     - protocol: TCP
       port: 80       # ClusterIP service port
       targetPort: 4499
-  type: ClusterIP
+  type: LoadBalancer

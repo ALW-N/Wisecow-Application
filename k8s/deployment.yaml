@@ -17,8 +17,8 @@ spec:
     spec:
       containers:
       - name: wisecow
-        image: wisecow:latest    # locally built image
-        imagePullPolicy: Never
+        image: katsura11/wisecow:latest    # locally built image
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 4499
         # Optional: readiness probe to check container is alive
